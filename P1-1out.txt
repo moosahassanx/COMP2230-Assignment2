@@ -1,0 +1,38 @@
+N_Farmer1: Wating for bridge. Going towards South
+S_Farmer2: Wating for bridge. Going towards North
+S_Farmer1: Wating for bridge. Going towards North
+N_Farmer2: Wating for bridge. Going towards South
+N_Farmer1: Crossing bridge Step 5.
+N_Farmer1: Crossing bridge Step 10.
+N_Farmer1: Crossing bridge Step 15.
+N_Farmer1: Across the bridge.
+NEON = 1
+S_Farmer2: Crossing bridge Step 5.
+N_Farmer1: Wating for bridge. Going towards North
+S_Farmer2: Crossing bridge Step 10.
+S_Farmer2: Crossing bridge Step 15.
+S_Farmer2: Across the bridge.
+NEON = 2
+N_Farmer2: Crossing bridge Step 5.
+N_Farmer2: Crossing bridge Step 10.
+N_Farmer2: Crossing bridge Step 15.
+S_Farmer2: Wating for bridge. Going towards South
+N_Farmer2: Across the bridge.
+NEON = 3
+S_Farmer1: Crossing bridge Step 5.
+N_Farmer2: Wating for bridge. Going towards North
+S_Farmer1: Crossing bridge Step 10.
+S_Farmer1: Crossing bridge Step 15.
+S_Farmer1: Across the bridge.
+NEON = 4
+N_Farmer1: Crossing bridge Step 5.
+N_Farmer1: Crossing bridge Step 10.
+S_Farmer1: Wating for bridge. Going towards South
+N_Farmer1: Crossing bridge Step 15.
+N_Farmer1: Across the bridge.
+NEON = 5
+…
+…
+…
+NOTE1: The output above is partial - the program is does not end automatically 
+NOTE2: This output may look somewhat different from run to run.
