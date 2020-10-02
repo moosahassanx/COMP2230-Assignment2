@@ -8,6 +8,7 @@ public class PA1
         // fetching data from file
         Scanner file = new Scanner(new File(args[0]));
         String newText = "";
+        Bridge ownBridge = new Bridge();
         try
         {
             while(file.hasNext())
@@ -20,12 +21,26 @@ public class PA1
                 {
                     String tempNum = newText.substring(2, 3);
                     int numN = Integer.parseInt(tempNum);
+                    
+                    // creating north farmers
+                    for(int i = 0; i < numN; i++)
+                    {
+                        Farmer northFarmer = new Farmer("N_Farmer" + (i+1) , "North", ownBridge);
+                        northFarmer.start();
+                    }
                 }
                 // reading S
                 else
                 {
                     String tempNum = newText.substring(2, 3);
                     int numS = Integer.parseInt(tempNum);
+
+                    // creating south farmers
+                    for(int i = 0 ; i < numS; i++)
+                    {
+                        Farmer southFarmer = new Farmer("S_Farmer" + (i+1), "South", ownBridge);
+                        southFarmer.start();
+                    }
                 }
 
             }
@@ -34,18 +49,8 @@ public class PA1
         {
             System.out.println("File reading error.");
         }
+
         file.close();
-
-        // learning threads...
-        System.out.println("THREAD TESTING");
-        Thread t1 = new Thread(new Farmer("one"));
-        Thread t2 = new Thread(new Farmer("two"));
-        Thread t3 = new Thread(new Farmer("three"));
-        Thread t4 = new Thread(new Farmer("four"));
-
-        t1.start();
-        t2.start();
-        t3.start();
-        t4.start();
+        
     }
 }

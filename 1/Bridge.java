@@ -9,7 +9,7 @@ public class Bridge
     public Bridge()
     {
         crossed = 0;
-        bridgeSem = new Semaphore(1);       // 1 bridge resource
+        bridgeSem = new Semaphore(1, true);       // 1 bridge resource
     }
 
     // accessors
