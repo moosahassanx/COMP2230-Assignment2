@@ -15,8 +15,6 @@ public class PA2 {
             {
                 newText = file.nextLine();
 
-                System.out.println(newText);
-
                 if(!newText.equals("END"))
                 {
                     String[] splitStr = newText.split("\\s+");
@@ -26,6 +24,14 @@ public class PA2 {
                     int eTime = Integer.parseInt(splitStr[2]);
 
                     Customer customerObject = new Customer(aTime, cusId, eTime);
+
+                    System.out.println("Customer (" + cusId + ") has been created with: ");
+                    System.out.println("arrival time: " + aTime);
+                    System.out.println("eating time: " + eTime + "\n");
+                }
+                else
+                {
+                    System.out.println("END OF CREATING CUSTOMERS");
                 }
             }
         }

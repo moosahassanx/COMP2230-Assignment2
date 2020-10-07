@@ -1,4 +1,4 @@
-public class Customer 
+public class Customer extends Thread
 {
     // attributes
     private String name;
@@ -14,7 +14,7 @@ public class Customer
     }
 
     // accessors
-    public String getName()
+    public String getCusName()
     {
         return this.name;
     }
@@ -28,7 +28,7 @@ public class Customer
     }
 
     // mutators
-    public void setName(String n)
+    public void setCusName(String n)
     {
         this.name = n;
     }
