@@ -1,13 +1,16 @@
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class PA2 {
-    public static void main(String args[]) throws IOException
+    public static void main(String args[]) throws IOException, InterruptedException
     {
         // fetching data from file
         Scanner file = new Scanner(new File(args[0]));
         String newText = "";
+        Restaurant restaurant = new Restaurant("Gusteau's");
+        ArrayList<Customer> customerList = new ArrayList<Customer>();
 
         try
         {
@@ -23,15 +26,8 @@ public class PA2 {
                     String cusId = splitStr[1];
                     int eTime = Integer.parseInt(splitStr[2]);
 
-                    Customer customerObject = new Customer(aTime, cusId, eTime);
-
-                    System.out.println("Customer (" + cusId + ") has been created with: ");
-                    System.out.println("arrival time: " + aTime);
-                    System.out.println("eating time: " + eTime + "\n");
-                }
-                else
-                {
-                    System.out.println("END OF CREATING CUSTOMERS");
+                    Customer customerObject = new Customer(aTime, cusId, eTime, restaurant);
+                    customerList.add(customerObject);                    
                 }
             }
         }
@@ -39,5 +35,24 @@ public class PA2 {
         {
             System.out.println("ERROR: " + e);
         }
+
+        // run through all the customers
+        for(int i = 0; i < customerList.size(); i++)
+        {
+            // there are more than 0 seats available
+            if(restaurant.availableSeats() > 0)
+            {
+                restaurant.allowCustomer(customerList.get(i));
+            }
+            // theres no seats available
+            else
+            {
+                restaurant.waitCustomer(customerList.get(i));
+            }
+        }
+
+        // displaying results
+        System.out.println("Customer  Arrives     Seats    Leave");
+        System.out.println("C1\t   0\t      0\t       5");              // FAKE OUTPUT
     }
 }
