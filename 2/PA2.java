@@ -36,23 +36,22 @@ public class PA2 {
             System.out.println("ERROR: " + e);
         }
 
+        int watch = 0;
+
         // run through all the customers
-        for(int i = 0; i < customerList.size(); i++)
+        for (Customer customer : customerList)
         {
-            // there are more than 0 seats available
-            if(restaurant.availableSeats() > 0)
-            {
-                restaurant.allowCustomer(customerList.get(i));
-            }
-            // theres no seats available
-            else
-            {
-                restaurant.waitCustomer(customerList.get(i));
-            }
+            customer.feedTime(watch);
+            customer.start();
         }
+
+
 
         // displaying results
         System.out.println("Customer  Arrives     Seats    Leave");
+        for (Customer c : customerList) {
+            c.getData();
+        }
         System.out.println("C1\t   0\t      0\t       5");              // FAKE OUTPUT
     }
 }

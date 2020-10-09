@@ -18,7 +18,7 @@ public class Bridge
         return crossed;
     }
 
-    // mutators
+    // methods
     public void cross()
     {
         // semaphore acquire

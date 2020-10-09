@@ -1,5 +1,3 @@
-import java.util.LinkedList;
-import java.util.Queue;
 import java.util.concurrent.Semaphore;
 
 public class Restaurant
@@ -7,16 +5,14 @@ public class Restaurant
     // attributes
     private String name;
     private Semaphore sem;
-    private Queue<Customer> q;
     private int watch;
 
     // constructor
     public Restaurant(String n)
     {
         this.name = n;
-        sem = new Semaphore(5);             // limit to 5 seats
-        q = new LinkedList<Customer>();
-        watch = 0;                          // keep track of time
+        sem = new Semaphore(5);                     // limit to 5 seats
+        watch = 0;
     }
 
     // accessors
@@ -37,28 +33,31 @@ public class Restaurant
         return this.sem.availablePermits();
     }
 
-    public void allowCustomer(Customer c) throws InterruptedException
+    // CONDITIONS MUST BE MET:
+    // - cputime == arrivalTime
+    // - customer id must be in order
+    public void allowCustomer(int aTime)
     {
-        System.out.println("Customer " + c.getCusName() + " has entered.");
-        
-        sem.acquire();
-        
-        c.run();        // run code for customer
-
-        System.out.println("Available seats: " + availableSeats() + "\n");
-
-        // customer will eat the food here and then need to leave
-        // when restaurant is full, the algorithm continues until theyre all done eating
-        // next wave of customers come in (using waitCustomer() method)
-        // ^ repeat this process
+        // customers are always trying to enter
+        while(true)
+        {
+            // if(aTime == watch)
+            // {
+                // semaphore acquire
+                try
+                {
+                    sem.acquire();
+                    return;
+                }
+                catch(Exception e) { }
+            // }
+        }
     }
-    
-    public void waitCustomer(Customer c)
+
+    public void leaveCustomer()
     {
-        // add customer to linked list
-        q.add(c);
-        System.out.println("Customer " + c.getCusName() + " is in waiting queue.");
-
-        System.out.println("Available seats: " + availableSeats() + "\n");
+        // semaphore release
+        sem.release();
     }
+
 }
