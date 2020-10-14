@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
 
 public class Restaurant
@@ -6,13 +7,19 @@ public class Restaurant
     private String name;
     private Semaphore sem;
     private int watch;
+    private ArrayList<Customer> cList;
+    private int servedCustomers;
+    private boolean isCleaning;
 
     // constructor
     public Restaurant(String n)
     {
         this.name = n;
-        sem = new Semaphore(5);                     // limit to 5 seats
-        watch = 0;
+        this.sem = new Semaphore(5);                     // limit to 5 seats
+        this.watch = 0;
+        this.cList = new ArrayList<Customer>();
+        this.servedCustomers = 0;
+        this.isCleaning = false;
     }
 
     // accessors
@@ -21,10 +28,30 @@ public class Restaurant
         return this.name;
     }
 
+    public ArrayList<Customer> getArraylist()
+    {
+        return cList;
+    }
+
+    public boolean getCleaningState()
+    {
+        return this.isCleaning;
+    }
+
     // mutators
     public void setName(String n)
     {
         this.name = n;
+    }
+
+    public void setArraylist(ArrayList<Customer> c)
+    {
+        this.cList = c;
+    }
+
+    public void setCleaningState(boolean s)
+    {
+        this.isCleaning = s;
     }
     
     // methods
@@ -33,31 +60,55 @@ public class Restaurant
         return this.sem.availablePermits();
     }
 
-    // CONDITIONS MUST BE MET:
-    // - cputime == arrivalTime
-    // - customer id must be in order
-    public void allowCustomer(int aTime)
+    public void allowCustomer()
     {
-        // customers are always trying to enter
-        while(true)
-        {
-            // if(aTime == watch)
-            // {
-                // semaphore acquire
-                try
-                {
-                    sem.acquire();
-                    return;
-                }
-                catch(Exception e) { }
-            // }
-        }
+        try { sem.acquire(); } catch(Exception e) { }
     }
 
     public void leaveCustomer()
     {
-        // semaphore release
-        sem.release();
+        servedCustomers++;
+        sem.release();          // semaphore release
+    }
+
+    public int getTime()
+    {
+        return this.watch;
+    }
+
+    public void runSimulation()
+    {
+        for (Customer customer : cList) 
+        {
+            customer.start();
+        }
+
+        while(this.servedCustomers < cList.size())
+        {
+            try { Thread.sleep(100); } catch (InterruptedException e) { }
+
+            if(availableSeats() == 0)
+            {
+                setCleaningState(true);
+
+                while(availableSeats() != 5)
+                {
+                    try { Thread.sleep(100); } catch (InterruptedException e) { }
+                    this.watch++;
+                }
+                for(int i = 0; i < 4; i++)
+                {
+                    try { Thread.sleep(100); } catch (InterruptedException e) { }
+                    this.watch++;
+                }
+
+                setCleaningState(false);
+            }
+
+            this.watch++;
+        }
+
+
     }
 
 }

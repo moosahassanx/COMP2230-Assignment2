@@ -3,7 +3,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class PA2 {
+public class PA2 
+{
     public static void main(String args[]) throws IOException, InterruptedException
     {
         // fetching data from file
@@ -27,7 +28,7 @@ public class PA2 {
                     int eTime = Integer.parseInt(splitStr[2]);
 
                     Customer customerObject = new Customer(aTime, cusId, eTime, restaurant);
-                    customerList.add(customerObject);                    
+                    customerList.add(customerObject);
                 }
             }
         }
@@ -36,22 +37,15 @@ public class PA2 {
             System.out.println("ERROR: " + e);
         }
 
-        int watch = 0;
-
-        // run through all the customers
-        for (Customer customer : customerList)
-        {
-            customer.feedTime(watch);
-            customer.start();
-        }
-
-
+        // send to list to restaurant
+        restaurant.setArraylist(customerList);
+        restaurant.runSimulation();
 
         // displaying results
         System.out.println("Customer  Arrives     Seats    Leave");
-        for (Customer c : customerList) {
+        for (Customer c : customerList)
+        {
             c.getData();
         }
-        System.out.println("C1\t   0\t      0\t       5");              // FAKE OUTPUT
     }
 }
