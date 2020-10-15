@@ -3,7 +3,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class PA2 
+public class P2 
 {
     public static void main(String args[]) throws IOException, InterruptedException
     {

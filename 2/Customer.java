@@ -1,3 +1,5 @@
+import javax.xml.stream.util.StreamReaderDelegate;
+
 public class Customer extends Thread
 {
     // attributes
@@ -109,50 +111,42 @@ public class Customer extends Thread
     
     public void getData()
     {
-        System.out.println(this.name + "\t   " + this.arrivalTime + "\t      " + this.seatedTime + "\t       " + this.exitTime);
+        String strArrival = String.format("%-11d", this.arrivalTime);
+        String strSeated = String.format("%-9d", this.seatedTime);
+        System.out.println(this.name + "\t   " + strArrival  + strSeated  + this.exitTime);
     }
 
     @Override
     public void run()
     {
-        System.out.println("AVAILABLE SEATS PRE RUN(): " + restaurant.availableSeats());
-
-        System.out.println(this.name + " is waiting to go in the restaurant at time: " + this.watch);
-
         // customer keeps trying to enter the restaurant
         while(true)
         {
             if(getArrival() > restaurant.getTime())
             {
-                System.out.println(this.name + " could not enter restaurant at time: " + restaurant.getTime());
                 try { sleep(50); } catch (InterruptedException e) { }
             }
             else
             {
                 while(restaurant.getCleaningState() == true)
                 {
-                    System.out.println(this.name + " is waiting for restaurant to finish cleaning at time: " + restaurant.getTime());
                     try { sleep(10); } catch (InterruptedException e) { }
                 }
 
                 restaurant.allowCustomer();
-                System.out.println(this.name + " has entered the restaurant at time: " + restaurant.getTime());
                 break;
             }
             
         }
 
         setSeated(restaurant.getTime());
-        
         for(int i = 0; i < getEating(); i++)
         {
-            System.out.println(this.name + " took a bite at time " + restaurant.getTime());
             try { sleep(100); } catch (InterruptedException e) { }
         }
 
         restaurant.leaveCustomer();
         setExit(seatedTime + getEating());
-        System.out.println(this.name + " has left the restaurant. AVAILABLE SEATS: " + restaurant.availableSeats());
         
     }
 }
