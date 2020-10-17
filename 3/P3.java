@@ -1,3 +1,11 @@
+// TITLE: 					Assignment2
+// COURSE: 					COMP2240
+// AUTHOR: 					Moosa Hassan
+// STUDENT NUMBER: 			3331532
+// DATE: 					17/10/2020 
+// DESCRIPTION: 			Main file - reads data text files and sends each information to its relative classes
+
+// importing java libraries
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -5,47 +13,48 @@ import java.util.Scanner;
 
 class P3
 {
-    public static void main(String args[]) throws FileNotFoundException
+    public static void main(final String args[]) throws FileNotFoundException 
     {
         // fetching data from file
-        Scanner file = new Scanner(new File(args[0]));
+        final Scanner file = new Scanner(new File(args[0]));
         String newText = "";
-        ArrayList<Customer> customerList = new ArrayList<>();
-        Restaurant restaurantMonitor = new Restaurant("Wacka Flocka Flame's Sippin Lean's Galore");
+        final ArrayList<Customer> customerList = new ArrayList<>();
+        final Restaurant restaurantMonitor = new Restaurant("Wacka Flocka Flame's Sippin Lean's Galore");
 
-        try
+        // reading the file
+        try 
         {
-            while(file.hasNext())
+            while (file.hasNext()) 
             {
                 newText = file.nextLine();
 
-                if(!newText.equals("END"))
+                // file has more information
+                if (!newText.equals("END")) 
                 {
-                    String[] splitStr = newText.split("\\s+");
-                    
-                    int aTime = Integer.parseInt(splitStr[0]);
-                    String cusId = splitStr[1];
-                    int eTime = Integer.parseInt(splitStr[2]);
+                    // managing and assigning data
+                    final String[] splitStr = newText.split("\\s+");
+                    final int aTime = Integer.parseInt(splitStr[0]);
+                    final String cusId = splitStr[1];
+                    final int eTime = Integer.parseInt(splitStr[2]);
 
-                    Customer customerObject = new Customer(aTime, cusId, eTime, restaurantMonitor);
+                    // create object with data and add to list
+                    final Customer customerObject = new Customer(aTime, cusId, eTime, restaurantMonitor);
                     customerList.add(customerObject);
                 }
             }
-        }
-        catch(Exception e)
+        } 
+        catch (final Exception e) 
         {
             System.out.println("ERROR: " + e);
         }
 
-        // logic
+        // send list to restaurant
         restaurantMonitor.setCustomerList(customerList);
-        ArrayList<Customer> finalList = restaurantMonitor.getCustomerList();
-        
         restaurantMonitor.openRestaurant();
 
         // displaying results
         System.out.println("Customer  Arrives     Seats    Leave");
-        for (Customer c : finalList)
+        for (final Customer c : customerList)
         {
             c.getData();
         }

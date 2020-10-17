@@ -1,20 +1,26 @@
+// TITLE: 					Assignment2
+// COURSE: 					COMP2240
+// AUTHOR: 					Moosa Hassan
+// STUDENT NUMBER: 			3331532
+// DATE: 					17/10/2020 
+// DESCRIPTION: 			monitor-acted class: controls when and how many customers can enter
+
+// importing java libraries
 import java.util.ArrayList;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
 
 public class Restaurant
 {
     // attributes
     private String name;
     private ArrayList<Customer> cList;
-    private int maxCustomers;
+    private final int maxCustomers;
     private int watch;
     private int numOfCus;
     private int toServe;
     private boolean cleaningState;
 
     // constructor
-    public Restaurant(String n)
+    public Restaurant(final String n) 
     {
         this.name = n;
         this.cList = new ArrayList<Customer>();
@@ -26,91 +32,71 @@ public class Restaurant
     }
 
     // accessors
-    public String getName()
-    {
-        return this.name;
-    }
+    public String getName() { return this.name; }
 
-    public ArrayList<Customer> getCustomerList()
-    {
-        return this.cList;
-    }
+    public ArrayList<Customer> getCustomerList() { return this.cList; }
 
-    public int getMaxCustomers()
-    {
-        return this.maxCustomers;
-    }
+    public int getMaxCustomers() { return this.maxCustomers; }
 
-    public int getNumOfCus()
-    {
-        return this.numOfCus;
-    }
+    public int getNumOfCus() { return this.numOfCus; }
 
-    public int getTime()
-    {
-        return this.watch;
-    }
+    public int getTime() { return this.watch; }
 
-    public int availableSeats()
-    {
-        return 5 - this.numOfCus;
-    }
+    public int availableSeats() { return 5 - this.numOfCus; }
 
-    public boolean getCleaningState()
-    {
-        return this.cleaningState;
-    }
+    public boolean getCleaningState() { return this.cleaningState; }
 
     // mutators
-    public void setName(String n)
-    {
-        this.name = n;
-    }
+    public void setName(final String n) { this.name = n; }
 
-    public void setCustomerList(ArrayList<Customer> c)
+    public void setNeedToClean(final boolean n) { this.cleaningState = n; }
+
+    public void setCustomerList(final ArrayList<Customer> c) 
     {
         this.cList = c;
         this.toServe = cList.size();
     }
 
-    public void setNeedToClean(boolean n)
-    {
-        this.cleaningState = n;
-    }
-
     // methods
-    public void openRestaurant()
+    public void openRestaurant() 
     {
-        for (Customer c : cList)
+        // start every thread in the list simultaneously
+        for (final Customer c : cList) 
         {
             c.start();
         }
 
-        while(this.toServe != 0)        // there are no more customers to serve
+        // iterate time until all the customers have been served
+        while (this.toServe != 0) 
         {
-            try { Thread.sleep(100); } catch (InterruptedException e) { }
+            try { Thread.sleep(100); } catch (final InterruptedException e) { }
 
-            if(this.cleaningState == true)
+            // restaurant requires cleaning process
+            if (this.cleaningState == true) 
             {
+                // begin cleaning process
                 this.cleaningState = true;
 
-                while(availableSeats() != 5)
+                // iterate time until all seats are not empty
+                while (availableSeats() != 5) 
                 {
-                    try { Thread.sleep(100); } catch (InterruptedException e) { }
+                    try { Thread.sleep(100); } catch (final InterruptedException e) { }
                     this.watch++;
                 }
-                for(int i = 0; i < 4; i++)
+                for (int i = 0; i < 4; i++) 
                 {
-                    try { Thread.sleep(100); } catch (InterruptedException e) { }
+                    try { Thread.sleep(100); } catch (final InterruptedException e) { }
                     this.watch++;
                 }
 
+                // cleaning process is finished
                 this.cleaningState = false;
             }
 
-            for (Customer c : this.cList) 
+            // all customers must notify all other customers for next stage
+            for (final Customer c : this.cList) 
             {
-                synchronized(c)
+                synchronized (c) 
                 {
                     c.notifyAll();
                 }
@@ -120,27 +106,29 @@ public class Restaurant
         }
     }
 
-    public boolean checkFull()
+    public boolean checkFull() 
     {
-        if(this.maxCustomers == this.numOfCus)
+        // the maximum number of customers has reached
+        if (this.maxCustomers == this.numOfCus) 
         {
             return true;
         }
-        else
+        // there are available seats in the restaurant
+        else 
         {
             return false;
         }
     }
 
-    public void allowCustomer(Customer c) throws InterruptedException
+    public void allowCustomer(final Customer c) throws InterruptedException 
     {
-        this.numOfCus++;
+        this.numOfCus++; // increment current number of customers
     }
 
-    public void leaveCustomer(Customer c)
+    public void leaveCustomer(final Customer c)
     {
-        this.numOfCus--;
-        this.toServe--;
+        this.numOfCus--;    // customers in the restaurant currently
+        this.toServe--;     // customers remaining to eat/enter
     }
 
 }

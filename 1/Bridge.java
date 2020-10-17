@@ -1,33 +1,42 @@
+// TITLE: 					Assignment2
+// COURSE: 					COMP2240
+// AUTHOR: 					Moosa Hassan
+// STUDENT NUMBER: 			3331532
+// DATE: 					17/10/2020 
+// DESCRIPTION: 			semaphore-based class: used to limit farmers attempting to run other parts of their code
+
+// importing java libraries
 import java.util.concurrent.Semaphore;
 
 public class Bridge
 {
+    // attributes
     private int crossed;
-    private Semaphore bridgeSem;
+    private final Semaphore bridgeSem;
 
     // constructor
-    public Bridge()
+    public Bridge() 
     {
         crossed = 0;
-        bridgeSem = new Semaphore(1, true);       // 1 bridge resource
+        bridgeSem = new Semaphore(1, true); // 1 bridge resource
     }
 
     // accessors
-    public int getCrossed()
+    public int getCrossed() 
     {
         return crossed;
     }
 
     // methods
-    public void cross()
+    public void cross() 
     {
         // semaphore acquire
-        try
+        try 
         {
             bridgeSem.acquire();
             crossed++;
         }
-        catch(Exception e)
+        catch (final Exception e)
         {
             System.out.println("ERROR: " + e);
         }

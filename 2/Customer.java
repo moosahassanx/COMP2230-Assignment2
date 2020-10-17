@@ -1,20 +1,26 @@
-import javax.xml.stream.util.StreamReaderDelegate;
+// TITLE: 					Assignment2
+// COURSE: 					COMP2240
+// AUTHOR: 					Moosa Hassan
+// STUDENT NUMBER: 			3331532
+// DATE: 					17/10/2020 
+// DESCRIPTION: 			individually attempts to enter the restaurant, eat and then leave to its given time
 
 public class Customer extends Thread
 {
     // attributes
     private String name;
-    private int arrivalTime;
+    private final int arrivalTime;
     private int eatingTime;
     private int seatedTime;
     private int exitTime;
-    private Restaurant restaurant;
+    private final Restaurant restaurant;
     private int watch;
     private boolean isDone;
-    private String state;
+    private final String state;
 
     // constructor
-    public Customer(int a, String n, int e, Restaurant r) {
+    public Customer(final int a, final String n, final int e, final Restaurant r) 
+    {
         this.name = n;
         this.arrivalTime = a;
         this.eatingTime = e;
@@ -26,125 +32,89 @@ public class Customer extends Thread
     }
 
     // accessors
-    public String getCusName() 
-    {
-        return this.name;
-    }
+    public String getCusName() { return this.name; }
 
-    public int getArrival() 
-    {
-        return this.arrivalTime;
-    }
+    public int getArrival() { return this.arrivalTime; }
 
-    public int getEating() 
-    {
-        return this.eatingTime;
-    }
+    public int getEating() { return this.eatingTime; }
 
-    public int getSeated() 
-    {
-        return this.seatedTime;
-    }
+    public int getSeated() { return this.seatedTime; }
 
-    public int getExit() 
-    {
-        return this.exitTime;
-    }
+    public int getExit() { return this.exitTime; }
 
-    public boolean leftRestaurant()
-    {
-        return this.isDone;
-    }
+    public boolean leftRestaurant() { return this.isDone; }
 
-    public int getTime()
-    {
-        return this.watch;
-    }
+    public int getTime() { return this.watch; }
 
-    public String getDoing()
-    {
-        return this.state;
-    }
+    public String getDoing() { return this.state; }
 
     // mutators
-    public void setCusName(String n) 
-    {
-        this.name = n;
-    }
+    public void setCusName(final String n) { this.name = n; }
 
-    public void setSeated(int s) 
-    {
-        this.seatedTime = s;
-    }
+    public void setSeated(final int s) { this.seatedTime = s; }
 
-    public void setExit(int e) 
-    {
-        this.exitTime = e;
-    }
+    public void setExit(final int e) { this.exitTime = e; }
 
-    public void hasLeft(boolean r)
-    {
-        this.isDone = r;
-    }
+    public void hasLeft(final boolean r) { this.isDone = r; }
 
-    public void setTime(int w)
-    {
-        this.watch = w;
-    }
+    public void setTime(final int w) { this.watch = w; }
 
-    public void whatDoing(String s)
-    {
-        this.state = s;
-    }
-
-    // method
+    // methods
     public void eat() 
     {
-        // decrement eating time
-        this.eatingTime -= 1;
+        this.eatingTime -= 1;   // decrement eating time
     }
 
-    public void feedTime(int w)
+    public void feedTime(final int w) 
     {
         this.watch = w;
     }
-    
-    public void getData()
+
+    public void getData() 
     {
-        String strArrival = String.format("%-11d", this.arrivalTime);
-        String strSeated = String.format("%-9d", this.seatedTime);
-        System.out.println(this.name + "\t   " + strArrival  + strSeated  + this.exitTime);
+        // retrieve data with proper spacing required
+        final String strArrival = String.format("%-11d", this.arrivalTime);
+        final String strSeated = String.format("%-9d", this.seatedTime);
+
+        // print in console
+        System.out.println(this.name + "\t   " + strArrival + strSeated + this.exitTime);
     }
 
     @Override
-    public void run()
+    public void run() 
     {
         // customer keeps trying to enter the restaurant
-        while(true)
+        while (true) 
         {
-            if(getArrival() > restaurant.getTime())
+            // customer is not allowed before it has arrived (basic logic)
+            if (getArrival() > restaurant.getTime()) 
             {
-                try { sleep(50); } catch (InterruptedException e) { }
+                try { sleep(50); } catch (final InterruptedException e) { }
             }
-            else
+            // attempt to allow the customer into the restaurant
+            else 
             {
-                while(restaurant.getCleaningState() == true)
+                // the restaurant is in a cleaning state
+                while (restaurant.getCleaningState() == true) 
                 {
-                    try { sleep(10); } catch (InterruptedException e) { }
+                    try { sleep(10); } catch (final InterruptedException e) { }
                 }
 
+                // allow the customer to enter the restaurant
                 restaurant.allowCustomer();
                 break;
             }
-            
+
         }
 
+        // customer is seated and begins eating immediately
         setSeated(restaurant.getTime());
-        for(int i = 0; i < getEating(); i++)
+        for (int i = 0; i < getEating(); i++) 
         {
-            try { sleep(100); } catch (InterruptedException e) { }
+            try { sleep(100); } catch (final InterruptedException e) { }
         }
 
+        // customer leaves the restaurant
         restaurant.leaveCustomer();
         setExit(seatedTime + getEating());
         
