@@ -11,8 +11,7 @@ public class Restaurant
     private int watch;
     private int numOfCus;
     private int toServe;
-    private boolean isFull;
-    private BlockingQueue bQueue;
+    private boolean cleaningState;
 
     // constructor
     public Restaurant(String n)
@@ -23,8 +22,7 @@ public class Restaurant
         this.watch = 0;
         this.numOfCus = 0;
         this.toServe = 0;
-        this.isFull = false;
-        this.bQueue = new ArrayBlockingQueue(5);
+        this.cleaningState = false;
     }
 
     // accessors
@@ -58,6 +56,11 @@ public class Restaurant
         return 5 - this.numOfCus;
     }
 
+    public boolean getCleaningState()
+    {
+        return this.cleaningState;
+    }
+
     // mutators
     public void setName(String n)
     {
@@ -70,6 +73,11 @@ public class Restaurant
         this.toServe = cList.size();
     }
 
+    public void setNeedToClean(boolean n)
+    {
+        this.cleaningState = n;
+    }
+
     // methods
     public void openRestaurant()
     {
@@ -78,21 +86,37 @@ public class Restaurant
             c.start();
         }
 
-        while(this.toServe != 0)
+        while(this.toServe != 0)        // there are no more customers to serve
         {
-            System.out.println("this.toServe: " + this.toServe);
             try { Thread.sleep(100); } catch (InterruptedException e) { }
 
-            this.watch++;
-            System.out.println("openRestaurant() loop");
-
-            // after every loop, notify all the other customers they gucci gang prada
-            /*
-            for (Customer c: cList)
+            if(this.cleaningState == true)
             {
-                c.notifyAll();
+                this.cleaningState = true;
+
+                while(availableSeats() != 5)
+                {
+                    try { Thread.sleep(100); } catch (InterruptedException e) { }
+                    this.watch++;
+                }
+                for(int i = 0; i < 4; i++)
+                {
+                    try { Thread.sleep(100); } catch (InterruptedException e) { }
+                    this.watch++;
+                }
+
+                this.cleaningState = false;
             }
-            */
+
+            for (Customer c : this.cList) 
+            {
+                synchronized(c)
+                {
+                    c.notifyAll();
+                }
+            }
+
+            this.watch++;
         }
     }
 
@@ -108,17 +132,15 @@ public class Restaurant
         }
     }
 
-    public void allowCustomer()
+    public void allowCustomer(Customer c) throws InterruptedException
     {
         this.numOfCus++;
     }
 
-    public void leaveCustomer()
+    public void leaveCustomer(Customer c)
     {
         this.numOfCus--;
         this.toServe--;
     }
 
 }
-
-// if you take the customer object.wait() itll stop everything until u do customerobject.notify()

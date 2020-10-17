@@ -85,15 +85,14 @@ public class Customer extends Thread
                     // the restaurant is full
                     synchronized (this)
                     {
-                        while(restaurant.checkFull() == true)
+                        while(restaurant.checkFull() == true || restaurant.getCleaningState() == true)
                         {
+                            restaurant.setNeedToClean(true);
                             wait();
                         }
                     }
 
-                    System.out.println(this.name + " has entered the restaurant at time: " + restaurant.getTime());
-                    restaurant.allowCustomer();
-                    System.out.println("AVAILABLE SEATS: " + restaurant.availableSeats());
+                    restaurant.allowCustomer(this);
                     break;
                 }
             }
@@ -102,18 +101,10 @@ public class Customer extends Thread
             
             for(int i = 0; i < getEating(); i++)
             {
-                System.out.println(this.name + " is eating.");
                 try { sleep(100); } catch (InterruptedException e) { }
             }
 
-            restaurant.leaveCustomer();
-            synchronized (this)
-            {
-                notify();
-            }
-
-            System.out.println(this.name + " has left the restaurant.");
-            System.out.println("AVAILABLE SEATS: " + restaurant.availableSeats());
+            restaurant.leaveCustomer(this);
 
             setExit(this.seatedTime + getEating());
 
